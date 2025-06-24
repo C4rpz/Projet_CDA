@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+        context: .
+        dockerfile: ./dockerfile
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=m3g80
+      - POSTGRES_DB=challenge_web
+
+
+volumes:
+  db-data:

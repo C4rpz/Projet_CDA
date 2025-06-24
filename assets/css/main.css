@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    input {
+        @apply bg-white pl-2;
+    }
+    textarea {
+        @apply bg-white px-2;
+    }
+    select {
+        @apply bg-white pl-2;
+    }
+}
