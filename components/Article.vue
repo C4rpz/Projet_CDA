@@ -14,7 +14,7 @@
                 alt="Titre de l'article 1"
                 class="rounded-lg mb-4"
               />
-              <h3 class="text-lg font-semibold text-gray-800">Amis à poils : Votre plateforme d'adoption d'animaux entre particuliers</h3>
+              <h3 class="text-lg font-semibold text-gray-800">Amis à poils : Votre plateforme d'adoption d'animaux</h3>
               <p class="text-gray-600 mt-2">
                 Adopter un animal de compagnie est une décision pleine d'amour et de responsabilités. Cet article explore les nombreux avantages de l'adoption : créer un lien avec un nouvel ami à quatre pattes, donner une seconde chance à un animal dans le besoin, et même les bénéfices pour votre bien-être mental et physique. Découvrez pourquoi tant de familles choisissent l'adoption comme une alternative à l'achat d'animaux.
               </p>

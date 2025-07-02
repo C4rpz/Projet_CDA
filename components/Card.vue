@@ -1,9 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { defineProps } from 'vue';
+
+const props = defineProps<{
+  animals: Array<any>
+}>();
+</script>
 
 <template>
   <div class="flex space-x-4 p-6 text-center justify-center bg-orange-100">
     <div
-      v-for="animal in animals"
+      v-for="animal in props.animals"
       :key="animal.id"
       class="card card-compact bg-slate-100 w-96 shadow-xl ml-2 mr-2 text-slate-800"
     >
@@ -27,14 +33,3 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  props: {
-    animals: {
-      type: Array,
-      required: true,
-    },
-  },
-};
-</script>
