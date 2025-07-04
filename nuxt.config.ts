@@ -9,5 +9,5 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ['@prisma/nuxt', '@nuxt/image'],
+  modules: ['@nuxt/image'],
 })

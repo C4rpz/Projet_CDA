@@ -18,16 +18,16 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import Accordion from "~/components/Accordion.vue";
-import Card from "~/components/Card.vue";
-import Article from "~/components/Article.vue";
+import Accordion from "../components/Accordion.vue";
+import Card from "../components/Card.vue";
+import Article from "../components/Article.vue";
 
 const latestAnnonces = ref<
   { id: number; name: string; description: string; created_at: string }[]
 >([]);
 
 onMounted(() => {
-  fetch("http://localhost:3001/api/v1/animals")
+  fetch("http://backend:3001/api/v1/animals")
     .then((response) => response.json())
     .then(
       (
@@ -52,3 +52,5 @@ onMounted(() => {
     });
 });
 </script>
+
+

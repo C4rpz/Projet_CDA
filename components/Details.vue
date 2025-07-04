@@ -30,7 +30,7 @@ const categoryName = ref<string | null>(null);
 // Fonction pour récupérer les détails de l'animal
 const fetchAnimalDetails = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3001/api/v1/animals/${id}`);
+    const response = await fetch(`http://backend:3001/api/v1/animals/${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch animal details");
     }
@@ -53,7 +53,7 @@ const fetchAnimalDetails = async (id: string) => {
 const fetchCategoryById = async (categoryId: number) => {
   try {
     const response = await fetch(
-      `http://localhost:3001/api/v1/categories/${categoryId}`,
+      `http://backend:3001/api/v1/categories/${categoryId}`,
     );
     if (!response.ok) {
       throw new Error("Failed to fetch category details");

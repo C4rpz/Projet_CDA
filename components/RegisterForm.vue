@@ -126,6 +126,7 @@ export default {
             city: this.city,
             password: this.password,
           }),
+          credentials: 'include'
         });
 
         const data = await response.json();

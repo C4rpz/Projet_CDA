@@ -108,7 +108,7 @@ const submitForm = async () => {
       user_id: formData.value.user_id,
     }
 
-    const response = await fetch('/api/v1/animals', {
+    const response = await fetch('http://backend:3001/api/v1/animals', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

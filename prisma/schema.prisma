@@ -6,7 +6,7 @@
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -14,58 +14,56 @@ generator client {
 }
 
 model users {
-  id            Int            @id @default(autoincrement())
-  firstName     String
-  lastName      String
-  email         String         @unique
-  phone_number  String?
-  city          String
-  password      String
-  is_admin      Boolean        @default(false)
-  created_at    DateTime       @default(now())
-  updated_at    DateTime       @default(now())
-  carts         carts[]
-  animals       animals[]
+  id           Int       @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  phone_number String?
+  city         String
+  password     String
+  is_admin     Boolean   @default(false)
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @default(now())
+  carts        carts[]
+  animals      animals[]
 }
 
 model animals {
-  id            Int            @id @default(autoincrement())
-  user_id       Int
-  name          String
-  category_id   Int
-  description   String
-  price         Float
-  age           Int?
-  breed         String?
-  image         String?
-  created_at    DateTime       @default(now())
-  updated_at    DateTime       @default(now())
-  user          users          @relation(fields: [user_id], references: [id])
-  category      categories     @relation(fields: [category_id], references: [id])
-  carts_items   carts_items[]
+  id          Int           @id @default(autoincrement())
+  user_id     Int
+  name        String
+  category_id Int
+  description String
+  price       Float
+  age         Int?
+  breed       String?
+  image       String?
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now())
+  user        users         @relation(fields: [user_id], references: [id])
+  category    categories    @relation(fields: [category_id], references: [id])
+  carts_items carts_items[]
 }
 
 model carts {
-  id            Int            @id @default(autoincrement())
-  user_id       Int            @unique
-  quantity      Int
-  total_price   Float
-  user          users          @relation(fields: [user_id], references: [id])
-  carts_items   carts_items[]
-
+  id          Int           @id @default(autoincrement())
+  user_id     Int           @unique
+  quantity    Int
+  total_price Float
+  user        users         @relation(fields: [user_id], references: [id])
+  carts_items carts_items[]
 }
 
 model carts_items {
-  id            Int            @id @default(autoincrement())
-  animal_id     Int            @unique
-  cart_id       Int
-  cart          carts          @relation(fields: [cart_id], references: [id])
-  animal        animals        @relation(fields: [animal_id], references: [id])
+  id        Int     @id @default(autoincrement())
+  animal_id Int     @unique
+  cart_id   Int
+  cart      carts   @relation(fields: [cart_id], references: [id])
+  animal    animals @relation(fields: [animal_id], references: [id])
 }
 
 model categories {
-  id            Int            @id @default(autoincrement())
-  name          String
-  animals       animals[]
-
+  id      Int       @id @default(autoincrement())
+  name    String
+  animals animals[]
 }

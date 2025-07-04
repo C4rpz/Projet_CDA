@@ -37,13 +37,18 @@
         >
           Créer mon annonce
         </nuxt-link>
-
+        <!-- Bouton Chat -->
+        <nuxt-link
+          to="/chat"
+          class="text-sm font-semibold leading-6 bg-orange-500 text-white px-2.5 py-1 rounded hover:bg-orange-600 transition-colors"
+        >
+          Chat
+        </nuxt-link>
         <!-- Bouton Profil -->
         <nuxt-link v-if="isAuthenticated" to="/profil"
           class="text-sm font-semibold leading-6 bg-orange-600 text-white px-2.5 py-1 rounded hover:bg-white hover:text-orange-600 border-2 border-transparent hover:border-orange-600 transition-colors">
           Profil
         </nuxt-link>
-
         <nuxt-link v-else to="/login"
           class="text-sm font-semibold leading-6 bg-orange-600 text-white px-2.5 py-1 rounded hover:bg-white hover:text-orange-600 border-2 border-transparent hover:border-orange-600 transition-colors">
           Log in
@@ -70,10 +75,13 @@
           <nuxt-link to="/createAnnonce" class="text-sm font-semibold leading-6 text-orange-600 hover:bg-orange-600 hover:text-white">
             Créer mon annonce
           </nuxt-link>
+          <!-- Bouton Chat (mobile) -->
+          <nuxt-link to="/chat" class="text-sm font-semibold leading-6 bg-orange-500 text-white px-2.5 py-1 rounded hover:bg-orange-600 transition-colors">
+            Chat
+          </nuxt-link>
           <nuxt-link v-if="isAuthenticated" to="/profil" class="text-sm font-semibold leading-6 bg-orange-600 text-white hover:bg-white hover:text-orange-600 border-2 border-transparent hover:border-orange-600">
             Profil
           </nuxt-link>
-
           <nuxt-link v-else to="/login" class="text-sm font-semibold leading-6 bg-orange-600 text-white px-2.5 py-1 rounded hover:bg-white hover:text-orange-600 border-2 border-transparent hover:border-orange-600 transition-colors">
             Log in
           </nuxt-link>
@@ -88,11 +96,11 @@ import { ref } from "vue";
 
 export default {
   setup() {
-    const mobileMenuOpen = ref(false); // Utilisez ref pour le menu mobile
+    const mobileMenuOpen = ref(false); 
 
     return {
       mobileMenuOpen,
-      isAuthenticated: false, // Variable pour l'état d'authentification
+      isAuthenticated: false, 
     };
   },
   mounted() {

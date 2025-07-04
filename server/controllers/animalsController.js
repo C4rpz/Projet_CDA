@@ -1,6 +1,6 @@
-const prisma = require("../db/prisma.js");
+import prisma from "../db/prisma.js";
 
-const getAllAnimals = async (req, res) => {
+export const getAllAnimals = async (req, res) => {
   try {
     const animals = await prisma.animals.findMany();
     res.json(animals);
@@ -9,62 +9,58 @@ const getAllAnimals = async (req, res) => {
   }
 };
 
-const getAnimalById = async (req, res) => {
-  const { id } = req.params;
+export const getAnimalById = async (req, res) => {
+  const animalId = Number(req.params.id);
+  if (isNaN(animalId)) return res.status(400).json({ error: "Invalid id" });
+
   try {
     const animal = await prisma.animals.findUnique({
-      where: {
-        id: parseInt(id),
-      },
+      where: { id: animalId },
     });
+    if (!animal) return res.status(404).json({ error: "Animal not found" });
     res.json(animal);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-const createAnimal = async (req, res) => {
-	const { name, user_id, category_id, age, description, breed, price } =
-		req.body;
-	try {
-		const newAnimal = await prisma.animals.create({
-			data: {
-				name,
-				user: {
-					connect: { id: user_id }, // Lien avec l'utilisateur existant via son ID
-				},
-				category: {
-					connect: { id: category_id }, // Lien avec l'utilisateur existant via son ID
-				},
-				age,
-				description,
-				breed,
-				price,
-			},
-		});
-		res.json(newAnimal);
-	} catch (error) {
-		res.status(500).json({ error: error.message });
-	}
-};
-
-const updateAnimal = async (req, res) => {
-  const { id } = req.params;
-  const { name, owner_id, category_id, age, description, breed, price } =
-    req.body;
+export const createAnimal = async (req, res) => {
+  const { name, user_id, category_id, age, description, breed, price } = req.body;
   try {
-    const updatedAnimal = await prisma.animals.update({
-      where: {
-        id: parseInt(id),
-      },
+    const newAnimal = await prisma.animals.create({
       data: {
         name,
-        owner_id,
-        category_id,
+        user: { connect: { id: user_id } },
+        category: { connect: { id: category_id } },
         age,
         description,
         breed,
         price,
+      },
+    });
+    res.status(201).json(newAnimal);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateAnimal = async (req, res) => {
+  const animalId = Number(req.params.id);
+  if (isNaN(animalId)) return res.status(400).json({ error: "Invalid id" });
+
+  const { name, user_id, category_id, age, description, breed, price } = req.body;
+
+  try {
+    const updatedAnimal = await prisma.animals.update({
+      where: { id: animalId },
+      data: {
+        name,
+        age,
+        description,
+        breed,
+        price,
+        user: user_id ? { connect: { id: user_id } } : undefined,
+        category: category_id ? { connect: { id: category_id } } : undefined,
       },
     });
     res.json(updatedAnimal);
@@ -73,13 +69,13 @@ const updateAnimal = async (req, res) => {
   }
 };
 
-const deleteAnimal = async (req, res) => {
-  const { id } = req.params;
+export const deleteAnimal = async (req, res) => {
+  const animalId = Number(req.params.id);
+  if (isNaN(animalId)) return res.status(400).json({ error: "Invalid id" });
+
   try {
     const deletedAnimal = await prisma.animals.delete({
-      where: {
-        id: parseInt(id),
-      },
+      where: { id: animalId },
     });
     res.json(deletedAnimal);
   } catch (error) {
@@ -87,25 +83,17 @@ const deleteAnimal = async (req, res) => {
   }
 };
 
-const fourLast = async (req, res) => {
-  const limit = parseInt(req.query.limit) || 10; // Défaut à 10 si non fourni
-  const order = req.query.order === "desc" ? "desc" : "asc"; // Par défaut ascendant
+export const fourLast = async (req, res) => {
+  const limit = parseInt(req.query.limit) || 4;
+  const order = req.query.order === "asc" ? "asc" : "desc";
 
-  const animals = await prisma.animals.findMany({
-    take: limit,
-    orderBy: {
-      created_at: order, // Trie par la date de création
-    },
-  });
-
-  res.json(animals);
-};
-
-module.exports = {
-  getAllAnimals,
-  getAnimalById,
-  createAnimal,
-  updateAnimal,
-  deleteAnimal,
-  fourLast,
+  try {
+    const animals = await prisma.animals.findMany({
+      take: limit,
+      orderBy: { created_at: order },
+    });
+    res.json(animals);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };

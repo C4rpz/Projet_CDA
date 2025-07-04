@@ -17,7 +17,7 @@
       };
     },
     created() {
-      fetch('http://localhost:3001/api/v1/animals')
+      fetch('http://backend:3001/api/v1/animals')
         .then(response => response.json())
         .then(data => {
           this.annonces = data;

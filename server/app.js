@@ -1,27 +1,24 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import http from "http";
+import cors from "cors";
+import { Server } from "socket.io";
 
-const usersRoute = require("./routes/usersRoute.js");
-const animalsRoute = require("./routes/animalsRoute.js");
-const cartsRoute = require("./routes/cartsRoute.js");
-const cartsItemsRoute = require("./routes/cartsItemsRoute.js");
-const categoriesRoute = require("./routes/categoriesRoute.js");
+import usersRoute from "./routes/usersRoute.js";
+import animalsRoute from "./routes/animalsRoute.js";
+import cartsRoute from "./routes/cartsRoute.js";
+import cartsItemsRoute from "./routes/cartsItemsRoute.js";
+import categoriesRoute from "./routes/categoriesRoute.js";
 
 const app = express();
-const PORT = 3001;
+const server = http.createServer(app);
 
-// Utilisation du middleware cors
 app.use(
-    cors({
-        origin: "*",
-        methods: ["GET", "POST", "DELETE", "OPTIONS", "PUT"],
-        allowedHeaders: [
-            "Origin",
-            "X-Requested-With",
-            "Content-Type",
-            "Accept",
-        ],
-    })
+  cors({
+    origin: 'http://localhost:3000',
+    methods: ["GET", "POST", "DELETE", "OPTIONS", "PUT"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+     credentials: true,
+  })
 );
 
 app.use(express.json());
@@ -32,8 +29,21 @@ app.use("/api/v1/carts", cartsRoute);
 app.use("/api/v1/cartsItems", cartsItemsRoute);
 app.use("/api/v1/categories", categoriesRoute);
 
-app.listen(PORT, async () => {
-  console.log(
-    `Serveur running: http://localhost:${PORT}`,
-  );
+const io = new Server(server, { cors: { origin: "*" } });
+
+io.on("connection", (socket) => {
+  console.log("Un utilisateur est connecté au chat");
+
+  socket.on("chat message", (msg) => {
+    io.emit("chat message", msg);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Utilisateur déconnecté");
+  });
+});
+
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+  console.log(`Serveur backend et chat sur http://localhost:${PORT}`);
 });

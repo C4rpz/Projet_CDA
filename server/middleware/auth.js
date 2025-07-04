@@ -1,16 +1,26 @@
-const jwt = require('jsonwebtoken');
-const SECRET = process.env.JWT_SECRET || 'votre_secret_ultra_long';
+import { getHeader, getCookie, createError, defineEventHandler } from 'h3'
+import jwt from 'jsonwebtoken'
 
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.sendStatus(401);
+const SECRET = process.env.JWT_SECRET || 'votre_secret_ultra_long'
 
-  jwt.verify(token, SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-}
+export default defineEventHandler((event) => {
+  const authHeader = getHeader(event, 'authorization')
+  const tokenFromHeader = authHeader?.split(' ')[1]
+  const tokenFromCookie = getCookie(event, 'token')
 
-module.exports = authenticateToken;
+  const token = tokenFromHeader || tokenFromCookie
+
+  console.log('Token reçu:', token)
+
+  if (!token) {
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  }
+
+  try {
+    const user = jwt.verify(token, SECRET)
+    console.log('Utilisateur décodé:', user) 
+    event.context.user = user
+  } catch (err) {
+    throw createError({ statusCode: 403, statusMessage: 'Forbidden' })
+  }
+})
