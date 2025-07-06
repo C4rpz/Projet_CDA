@@ -4,7 +4,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 # 1. Dépendances seulement (cache layer)
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install
 
 # 2. Le reste du code (sans node_modules)

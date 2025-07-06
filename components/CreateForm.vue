@@ -83,7 +83,7 @@ const submitForm = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
-      credentials: 'include' // Assurez-vous d'envoyer les cookies
+      credentials: 'include' 
     })
     if (!response.ok) throw new Error('Erreur lors de la création')
     formData.value = { name: '', description: '', category_id: '', postalCode: '', age: '', breed: '', price: '', user_id: 1 }
