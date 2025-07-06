@@ -1,26 +1,50 @@
-import { getHeader, getCookie, createError, defineEventHandler } from 'h3'
-import jwt from 'jsonwebtoken'
+import {
+	getHeader,
+	getCookie,
+	createError,
+	defineEventHandler,
+	sendRedirect,
+} from "h3";
+import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET || 'votre_secret_ultra_long'
+const SECRET = process.env.JWT_SECRET || "votre_secret_ultra_long";
 
-export default defineEventHandler((event) => {
-  const authHeader = getHeader(event, 'authorization')
-  const tokenFromHeader = authHeader?.split(' ')[1]
-  const tokenFromCookie = getCookie(event, 'token')
+export default defineEventHandler(async (event) => {
+	// Routes publiques qui ne nécessitent pas d'authentification
+	const publicRoutes = [
+		"/login",
+		"/signup",
+		"/api/v1/users/login",
+		"/api/v1/users/register",
+		"/api/v1/categories",
+		"/api/v1/animals",
+	];
 
-  const token = tokenFromHeader || tokenFromCookie
+	if (publicRoutes.some((route) => event.node.req.url?.startsWith(route))) {
+		return;
+	}
 
-  console.log('Token reçu:', token)
+	// Récupération du token depuis le header Authorization ou le cookie
+	const authHeader = getHeader(event, "Authorization");
+	const cookieToken = getCookie(event, "token"); // Utilise le cookie 'token' au lieu de 'authjs.session-token'
 
-  if (!token) {
-    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-  }
+	const token = authHeader ? authHeader.replace("Bearer ", "") : cookieToken;
 
-  try {
-    const user = jwt.verify(token, SECRET)
-    console.log('Utilisateur décodé:', user) 
-    event.context.user = user
-  } catch (err) {
-    throw createError({ statusCode: 403, statusMessage: 'Forbidden' })
-  }
-})
+	// console.log("Auth Header:", authHeader);
+	// console.log("Cookie Token:", cookieToken);
+	// console.log("Token final:", token);
+
+	if (!token) {
+		// console.log("Aucun token trouvé");
+		return sendRedirect(event, "/login");
+	}
+
+	try {
+		const user = jwt.verify(token, SECRET);
+		// console.log("Utilisateur décodé:", user);
+		event.context.user = user;
+	} catch (err) {
+		console.error("Erreur de vérification du token:", err);
+		throw createError({ statusCode: 403, statusMessage: "Forbidden" });
+	}
+});

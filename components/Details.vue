@@ -30,7 +30,7 @@ const categoryName = ref<string | null>(null);
 // Fonction pour récupérer les détails de l'animal
 const fetchAnimalDetails = async (id: string) => {
   try {
-    const response = await fetch(`http://backend:3001/api/v1/animals/${id}`);
+    const response = await fetch(`http://localhost:3001/api/v1/animals/${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch animal details");
     }
@@ -53,8 +53,7 @@ const fetchAnimalDetails = async (id: string) => {
 const fetchCategoryById = async (categoryId: number) => {
   try {
     const response = await fetch(
-      `http://backend:3001/api/v1/categories/${categoryId}`,
-    );
+      `http://localhost:3001/api/v1/categories/${categoryId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch category details");
     }
@@ -70,7 +69,9 @@ const fetchCategoryById = async (categoryId: number) => {
 
 // Charger les détails de l'animal lorsque la page est montée
 onMounted(() => {
-  fetchAnimalDetails(animalId);
+  // S'assurer que animalId est une chaîne
+  const id = Array.isArray(animalId) ? animalId[0] : animalId;
+  fetchAnimalDetails(id);
 });
 </script>
 
@@ -78,22 +79,14 @@ onMounted(() => {
   <section v-if="animal" class="pt-8 mb-14 max-h-screen">
     <!-- Bouton "Go Back" repositionné au-dessus du contenu principal -->
 
-    <div
-      class="container mx-auto flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-6"
-    >
+    <div class="container mx-auto flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-6">
       <!-- Image de l'animal -->
       <div class="w-full md:w-1/3">
-        <img
-          src="/assets/photos/cat.png"
-          alt="Image de {{ animal.name }}"
-          class="w-full h-auto rounded-lg shadow-lg"
-        />
+        <img src="/assets/photos/cat.png" alt="Image de {{ animal.name }}" class="w-full h-auto rounded-lg shadow-lg" />
       </div>
 
       <!-- Détails de l'animal -->
-      <div
-        class="w-full md:w-1/2 bg-neutral-800 text-white p-6 rounded-lg shadow-lg"
-      >
+      <div class="w-full md:w-1/2 bg-neutral-800 text-white p-6 rounded-lg shadow-lg">
         <h1 class="text-4xl font-bold mb-4">{{ animal.name }}</h1>
         <p class="text-sm mb-4 text-amber-400">ANIMAL ID: {{ animal.id }}</p>
         <ul class="text-lg leading-relaxed space-y-3">
@@ -113,10 +106,8 @@ onMounted(() => {
         </ul>
       </div>
     </div>
-    <NuxtLink
-      to="/"
-      class="bg-amber-500 text-white px-4 py-2 mb-4 mt-6 inline-flex items-center rounded-lg hover:bg-amber-600 shadow-md"
-    >
+    <NuxtLink to="/"
+      class="bg-amber-500 text-white px-4 py-2 mb-4 mt-6 inline-flex items-center rounded-lg hover:bg-amber-600 shadow-md">
       ← Go Back
     </NuxtLink>
   </section>

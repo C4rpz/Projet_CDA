@@ -5,11 +5,7 @@
       <h2 class="text-center text-2xl text-orange-700 font-bold mt-6 pt-5">
         Nos Nouveaux Arrivants
       </h2>
-      <NuxtLink
-        to="/annonces"
-        class="absolute right-0 text-orange-700 font-bold"
-        >Rencontrer les -></NuxtLink
-      >
+      <NuxtLink to="/annonces" class="absolute right-0 text-orange-700 font-bold">Rencontrer les -></NuxtLink>
     </div>
     <Card :animals="latestAnnonces" />
   </div>
@@ -27,7 +23,7 @@ const latestAnnonces = ref<
 >([]);
 
 onMounted(() => {
-  fetch("http://backend:3001/api/v1/animals")
+  fetch("http://localhost:3001/api/v1/animals")
     .then((response) => response.json())
     .then(
       (
@@ -52,5 +48,3 @@ onMounted(() => {
     });
 });
 </script>
-
-

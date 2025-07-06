@@ -1,11 +1,11 @@
 import express from "express";
 
-import * as categoriesController from "../controllers/categoriesControllers.js";
+import * as categoriesService from "../services/categoriesService.js";
 
 const router = express.Router();
 
-router.get("/", categoriesController.getAllCategories);
-router.get("/:id", categoriesController.getCategoryById);
-router.post("/", categoriesController.createCategory);
+router.get("/", categoriesService.getAllCategories);
+router.get("/:id", categoriesService.getCategoryById);
+router.post("/", categoriesService.createCategory);
 
 export default router;

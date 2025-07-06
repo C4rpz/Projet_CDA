@@ -1,11 +1,11 @@
 import express from "express";
-import * as cartsItemsController from "../controllers/cartsItemsController.js";
+import * as cartsItemsService from "../services/cartsItemsService.js";
 
 const router = express.Router();
 
-router.get("/", cartsItemsController.getAllCartsItems);
-router.get("/:id", cartsItemsController.getCartItemsById);
-router.post("/", cartsItemsController.createCartItems);
-router.delete("/:id", cartsItemsController.deleteCartItems);
+router.get("/", cartsItemsService.getAllCartsItems);
+router.get("/:id", cartsItemsService.getCartItemsById);
+router.post("/", cartsItemsService.createCartItems);
+router.delete("/:id", cartsItemsService.deleteCartItems);
 
 export default router;

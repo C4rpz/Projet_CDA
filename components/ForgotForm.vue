@@ -91,6 +91,7 @@ export default {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include", // Pour envoyer les cookies
           }
         );
 
@@ -114,6 +115,7 @@ export default {
             body: JSON.stringify({
               password: hashedPassword,
             }),
+            credentials: "include", // Pour envoyer les cookies
           }
         );
 

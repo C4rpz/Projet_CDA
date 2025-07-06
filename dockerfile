@@ -1,20 +1,22 @@
-FROM node:20.12.2
+# docker/backend/Dockerfile
+FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# 1. Dépendances seulement (cache layer)
+COPY package.json package-lock.json ./
 RUN npm install
 
+# 2. Le reste du code (sans node_modules)
 COPY . .
 
-RUN npm install -g prisma
-
+# Prisma client généré pour l’arch Linux
 RUN npx prisma generate --schema=./prisma/schema.prisma
 
-WORKDIR /app/server
-
-RUN apt-get update && apt-get install -y netcat-openbsd
-
+# Attente DB + migration puis lancement serveur
+RUN apk add --no-cache netcat-openbsd
 EXPOSE 3001
-
-CMD ["sh", "-c", "while ! nc -z db 5432; do echo 'Waiting for database connection...'; sleep 1; done && npx prisma migrate deploy --schema=../prisma/schema.prisma && node app.js"]
+CMD sh -c ' \
+   while ! nc -z db 3306; do echo "Waiting for database…"; sleep 1; done && \
+   npx prisma migrate deploy --schema=./prisma/schema.prisma && \
+   node server/app.js'

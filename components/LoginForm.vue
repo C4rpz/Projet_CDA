@@ -64,57 +64,57 @@ export default {
   },
   methods: {
     async handleLogin() {
-    try {
-      const response = await fetch('http://localhost:3001/api/v1/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: this.email,
-          password: this.password,
-        }),
-        credentials: 'include'
-      });
+      try {
+        const response = await fetch('http://localhost:3001/api/v1/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password,
+          }),
+          credentials: 'include'
+        });
 
-      if (!response.ok) {
-        throw new Error('Erreur lors de la connexion');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la connexion');
+        }
+
+        const data = await response.json();
+
+        const token = useCookie('token', {
+          maxAge: 60 * 60 * 24 * 5,
+          secure: false,
+          sameSite: 'strict'
+        });
+        token.value = data.token;
+
+        // const protectedResponse = await fetch('http://localhost:3001/api/v1/protected-route', {
+        //   method: 'GET',
+        //   headers: {
+        //     'Authorization': `Bearer ${token.value}`
+        //   },
+        //   credentials: 'include'
+        // });
+
+        // if (!protectedResponse.ok) {
+        //   throw new Error('Erreur sur la route protégée');
+        // }
+
+        // const protectedData = await protectedResponse.json();
+        // console.log('Données protégées reçues:', protectedData);
+
+        this.$router.push('/');
+
+      } catch (error) {
+        this.error = error.message;
       }
-
-      const data = await response.json();
-
-      const token = useCookie('token', {
-        maxAge: 60 * 60 * 24 * 5,
-        secure: false,
-        sameSite: 'strict'
-      });
-      token.value = data.token;
-
-      const protectedResponse = await fetch('http://localhost:3001/api/v1/protected-route', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token.value}`
-        },
-        credentials: 'include'
-      });
-
-      if (!protectedResponse.ok) {
-        throw new Error('Erreur sur la route protégée');
-      }
-
-      const protectedData = await protectedResponse.json();
-      console.log('Données protégées reçues:', protectedData);
-
-      this.$router.push('/');
-
-    } catch (error) {
-      this.error = error.message;
-    }
-  },
+    },
 
     handleLogout() {
-  const token = useCookie('token');
-  token.value = null; 
-  this.$router.push('/login');
-}
+      const token = useCookie('token');
+      token.value = null;
+      this.$router.push('/login');
+    }
 
   }
 };

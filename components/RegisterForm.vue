@@ -137,8 +137,7 @@ export default {
           throw new Error("Erreur lors de l'inscription");
         }
 
-        sessionStorage.setItem('isAuthenticated', 'true');
-        this.$router.push('/');
+        this.$router.push('/login');
 
       } catch (error) {
         this.error = error.message;
